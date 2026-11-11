@@ -90,6 +90,16 @@ describe("regionToBounds", () => {
 });
 
 describe("coverage", () => {
+  it("ne compte pas la cellule qui commence sur le bord du rectangle", () => {
+    const bounds = {
+      minLat: 0,
+      maxLat: CELL_DEG,
+      minLng: 0,
+      maxLng: CELL_DEG,
+    };
+    expect(coverage([{ i: 0, j: 0 }], bounds)).toBe(1);
+  });
+
   it("calcule la part explorée d’une zone", () => {
     const bounds = {
       minLat: 0,

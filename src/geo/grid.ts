@@ -90,11 +90,14 @@ export function regionToBounds(region: Region, scale = 1): Bounds {
 
 /** Plage d'indices de cellules couverte par un rectangle (sert aux requêtes SQL). */
 export function cellRange(bounds: Bounds) {
+  // Pour le bord max, la dernière cellule est celle qui commence avant lui :
+  // `Math.ceil - 1` et non `Math.floor`, sinon une cellule qui démarre
+  // exactement sur le bord est comptée alors qu'elle est hors du rectangle.
   return {
     minI: Math.floor(bounds.minLat / CELL_DEG),
-    maxI: Math.floor(bounds.maxLat / CELL_DEG),
+    maxI: Math.ceil(bounds.maxLat / CELL_DEG) - 1,
     minJ: Math.floor(bounds.minLng / CELL_DEG),
-    maxJ: Math.floor(bounds.maxLng / CELL_DEG),
+    maxJ: Math.ceil(bounds.maxLng / CELL_DEG) - 1,
   };
 }
 
