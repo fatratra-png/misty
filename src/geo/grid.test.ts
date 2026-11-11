@@ -6,6 +6,7 @@ import {
   coverage,
   distanceMeters,
   mergeIntoRows,
+  regionToBounds,
 } from "./grid";
 
 describe("cellOf", () => {
@@ -63,6 +64,28 @@ describe("mergeIntoRows", () => {
         2,
       ),
     ).toHaveLength(1);
+  });
+});
+
+describe("regionToBounds", () => {
+  it("ne retourne jamais un rectangle inversé près des pôles", () => {
+    const north = regionToBounds({
+      latitude: 85.2,
+      longitude: 10,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
+    expect(north.minLat).toBeLessThan(north.maxLat);
+    expect(north.maxLat).toBe(85);
+
+    const south = regionToBounds({
+      latitude: -85.2,
+      longitude: 10,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    });
+    expect(south.minLat).toBeLessThan(south.maxLat);
+    expect(south.minLat).toBe(-85);
   });
 });
 

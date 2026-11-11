@@ -69,13 +69,20 @@ export function cellsAround(point: LatLng, radiusM = REVEAL_RADIUS_M): Cell[] {
   return cells;
 }
 
-/** Rectangle géographique couvert par une région de carte (scale > 1 = plus large). */
+export const MAX_LATITUDE = 85; // projection de Mercator : au-delà, la carte n'a plus de sens
+
 export function regionToBounds(region: Region, scale = 1): Bounds {
   const halfLat = (region.latitudeDelta * scale) / 2;
   const halfLng = (region.longitudeDelta * scale) / 2;
+  // On borne le centre avant de calculer les bords : clamper min et max
+  // séparément inverserait le rectangle près des pôles (minLat > maxLat).
+  const latitude = Math.min(
+    Math.max(region.latitude, -MAX_LATITUDE),
+    MAX_LATITUDE,
+  );
   return {
-    minLat: Math.max(region.latitude - halfLat, -85),
-    maxLat: Math.min(region.latitude + halfLat, 85),
+    minLat: Math.max(latitude - halfLat, -MAX_LATITUDE),
+    maxLat: Math.min(latitude + halfLat, MAX_LATITUDE),
     minLng: Math.max(region.longitude - halfLng, -180),
     maxLng: Math.min(region.longitude + halfLng, 180),
   };
