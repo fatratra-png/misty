@@ -1,11 +1,12 @@
 import { Stack } from "expo-router";
-import { StatusBar } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { colors } from "../src/theme";
 
 const RootLayout = () => {
   return (
     <>
-      <StatusBar />
+      {/* L'app est sombre : sans ça, iOS affiche des icônes foncées invisibles. */}
+      <StatusBar style="light" />
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: colors.bg },
