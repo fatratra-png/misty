@@ -1,11 +1,12 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { SQLiteProvider } from "expo-sqlite";
+import { migrateDbIfNeeded } from "../src/db/schema";
 import { colors } from "../src/theme";
 
-const RootLayout = () => {
+export default function RootLayout() {
   return (
-    <>
-      {/* L'app est sombre : sans ça, iOS affiche des icônes foncées invisibles. */}
+    <SQLiteProvider databaseName="misty.db" onInit={migrateDbIfNeeded}>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -17,8 +18,7 @@ const RootLayout = () => {
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>
-    </>
+    </SQLiteProvider>
   );
-};
-
-export default RootLayout;
+}
+  
